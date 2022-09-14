@@ -25,11 +25,12 @@ app.get('/',(req,res)=>res.status(200).send('hello world'));
 
 app.post("/messages/new", (req, res) => {
     const dbMessage = req.body;
-    console.log(dbMessage)
+
 
     Messages.create(dbMessage, (err, data) => {
         if (err) {
             res.status(500).send(err)
+            console.log(err)
         } else{
             res.status(201).send(data)
         }
