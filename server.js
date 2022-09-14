@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import Messages from './dbMessages.js';
 import Pusher from 'pusher';
 import cors from 'cors';
+import path from 'path'
 
 //app config
 const app = express();
@@ -16,6 +17,7 @@ const pusher = new Pusher({
     cluster: "us2",
     useTLS: true
   });
+
 
 //middleware
 app.use(express.json());
@@ -80,6 +82,15 @@ app.post("/messages/new", (req, res) => {
         }
     })
 })
+
+//Serve statis assets if in production
+if(process.env.NODE_ENV === 'production'){
+    app.use(express.static('whatsapp/build'));
+
+    app.get('*', (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'whatsapp', 'build', 'index.html'));
+    });
+}
 
 // listener
 app.listen(port, ()=> console.log(`Listening on localhost:${port}`));
